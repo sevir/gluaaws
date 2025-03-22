@@ -48,3 +48,33 @@ func TestListEC2Instances(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestCreateCloudfrontInvalidation(t *testing.T) {
+	L := lua.NewState()
+	defer L.Close()
+
+	L.PreloadModule("aws", Loader)
+	if err := L.DoString(`
+		local aws = require("aws")
+		
+		-- Create CloudFront invalidation
+		local result = aws.createCloudfrontInvalidation("us-east-1", "default", "EDFDVBD6EXAMPLE", {"/images/*", "/index.html"})
+		
+		-- Basic validation of return value
+		assert(type(result) == "table")
+		
+		-- Validate structure of returned invalidation data
+		print("Invalidation ID:", result.id)
+		print("Status:", result.status)
+		
+		-- Check paths
+		assert(type(result.paths) == "table")
+		print("Paths to invalidate:")
+		for _, path in ipairs(result.paths) do
+			assert(type(path) == "string")
+			print("  -", path)
+		end
+	`); err != nil {
+		t.Error(err)
+	}
+}

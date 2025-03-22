@@ -4,6 +4,7 @@ go 1.23.4
 
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.29.9
+	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.45.2
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.210.1
 	github.com/yuin/gopher-lua v1.1.1
 )

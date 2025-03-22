@@ -32,6 +32,19 @@ for _, instance in ipairs(instances) do
         print("Tag:", tagKey, "=", tagValue)
     end
 end
+
+-- Create CloudFront invalidation
+local invalidation = aws.createCloudfrontInvalidation("us-east-1", "default", "EDFDVBD6EXAMPLE", {"/images/*", "/index.html"})
+
+-- Access invalidation properties
+print("Invalidation ID:", invalidation.id)
+print("Status:", invalidation.status)
+
+-- Access invalidation paths
+print("Paths to invalidate:")
+for _, path in ipairs(invalidation.paths) do
+    print("  -", path)
+end
 ```
 
 Each instance object contains the following properties:
@@ -41,3 +54,42 @@ Each instance object contains the following properties:
 - `privateIp`: Private IP address (if available)
 - `publicIp`: Public IP address (if available)
 - `tags`: Table containing instance tags
+
+Each invalidation object contains the following properties:
+- `id`: The CloudFront invalidation ID
+- `status`: Current invalidation status
+- `paths`: Table containing paths that are being invalidated
+
+## Tasks
+
+### tag
+
+Add a new tag and create latest tag if not exists
+
+Inputs: MSG
+
+```
+TAG_VERSION=$(convco version -b)
+git tag -a v$TAG_VERSION -m "$MSG"
+git push origin v$TAG_VERSION
+git tag -f latest -m "$MSG"
+git push -f origin latest
+```
+
+### changelog
+
+Generate changelog
+
+```
+convco changelog > CHANGELOG.md
+git add CHANGELOG.md
+git commit -m "Update CHANGELOG.md"
+```
+
+### refresh-dependencies
+
+Refresh dependencies
+
+```
+go mod tidy
+```
