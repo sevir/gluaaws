@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased](https://github.com/sevir/gluaaws/compare/v0.1.1...3e93472bd0943b29c482a12284e6662c16863d16) (2025-03-22)
+
+### Fixes
+
+* Fix createInvalidation and tested list files and s3
+([3e93472](https://github.com/sevir/gluaaws/commit/3e93472bd0943b29c482a12284e6662c16863d16))
+
 ### [v0.1.1](https://github.com/sevir/gluaaws/compare/v0.1.0...v0.1.1) (2025-03-22)
 
 #### Features
