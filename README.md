@@ -52,6 +52,7 @@ print("Upload success:", uploadSuccess)
 
 -- List files in an S3 bucket
 local files = aws.listS3Files("us-west-2", "default", "my-bucket")
+local files = aws.listS3Files("us-west-2", "default", "my-bucket:/prefix/")
 print("Files in bucket:")
 for _, fileName in ipairs(files) do
     print("  -", fileName)

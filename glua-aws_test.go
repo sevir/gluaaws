@@ -15,7 +15,7 @@ func TestListEC2Instances(t *testing.T) {
 		local aws = require("aws")
 		
 		-- List EC2 instances with region and profile
-		local results = aws.listEC2Instances("us-west-2", "default")
+		local results = aws.listEC2Instances("eu-west-1", "thesaiyankiwi")
 		
 		-- Basic validation of return value
 		assert(type(results) == "table")
@@ -58,7 +58,7 @@ func TestCreateCloudfrontInvalidation(t *testing.T) {
 		local aws = require("aws")
 		
 		-- Create CloudFront invalidation
-		local result = aws.createCloudfrontInvalidation("us-east-1", "default", "EDFDVBD6EXAMPLE", {"/images/*", "/index.html"})
+		local result = aws.createCloudfrontInvalidation("eu-west-1", "thesaiyankiwi", "EDFDVBD6EXAMPLE", {"/images/*", "/index.html"})
 		
 		-- Basic validation of return value
 		assert(type(result) == "table")

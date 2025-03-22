@@ -9,8 +9,10 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront"
+	"github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go/aws"
 	lua "github.com/yuin/gopher-lua"
 )
 
@@ -124,17 +126,15 @@ func createCloudfrontInvalidation(L *lua.LState) int {
 
 	// Build paths for invalidation
 	items := make([]string, len(paths))
-	for i, path := range paths {
-		items[i] = path
-	}
+	copy(items, paths)
 
 	// Create invalidation request
 	input := &cloudfront.CreateInvalidationInput{
 		DistributionId: &distributionID,
-		InvalidationBatch: &cloudfront.InvalidationBatch{
+		InvalidationBatch: &types.InvalidationBatch{
 			CallerReference: &reference,
-			Paths: &cloudfront.Paths{
-				Quantity: int32(len(items)),
+			Paths: &types.Paths{
+				Quantity: aws.Int32(int32(len(items))),
 				Items:    items,
 			},
 		},
@@ -303,7 +303,7 @@ func downloadFromS3(L *lua.LState) int {
 
 	// Get object from S3
 	resp, err := client.GetObject(context.TODO(), &s3.GetObjectInput{
-		Bucket: &key,
+		Bucket: &bucket,
 		Key:    &key,
 	})
 	if err != nil {
