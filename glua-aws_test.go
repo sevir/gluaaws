@@ -78,3 +78,90 @@ func TestCreateCloudfrontInvalidation(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestUploadToS3(t *testing.T) {
+	L := lua.NewState()
+	defer L.Close()
+
+	L.PreloadModule("aws", Loader)
+	if err := L.DoString(`
+		local aws = require("aws")
+		
+		-- Create a temp file to upload
+		local f = io.open("test_upload.txt", "w")
+		f:write("This is test content for S3 upload")
+		f:close()
+		
+		-- Upload file to S3
+		local success = aws.uploadToS3("us-west-2", "default", "test-bucket", "test-key.txt", "test_upload.txt")
+		
+		-- Basic validation
+		assert(success == true, "Upload should return true on success")
+		
+		-- Clean up temp file
+		os.remove("test_upload.txt")
+		
+		print("S3 upload test completed successfully")
+	`); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestListS3Files(t *testing.T) {
+	L := lua.NewState()
+	defer L.Close()
+
+	L.PreloadModule("aws", Loader)
+	if err := L.DoString(`
+		local aws = require("aws")
+		
+		-- List files in S3 bucket
+		local files = aws.listS3Files("us-west-2", "default", "test-bucket")
+		
+		-- Basic validation of return value
+		assert(type(files) == "table", "Should return a table of files")
+		
+		-- Print and validate files
+		print("Files in S3 bucket:")
+		for i, fileName in ipairs(files) do
+			assert(type(fileName) == "string", "Each file name should be a string")
+			print("  -", fileName)
+		end
+		
+		print("S3 list files test completed successfully")
+	`); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestDownloadFromS3(t *testing.T) {
+	L := lua.NewState()
+	defer L.Close()
+
+	L.PreloadModule("aws", Loader)
+	if err := L.DoString(`
+		local aws = require("aws")
+		
+		-- Download file from S3
+		local success = aws.downloadFromS3("us-west-2", "default", "test-bucket", "test-key.txt", "test_download.txt")
+		
+		-- Basic validation
+		assert(success == true, "Download should return true on success")
+		
+		-- Verify the file exists
+		local f = io.open("test_download.txt", "r")
+		assert(f ~= nil, "Downloaded file should exist")
+		
+		-- Read and verify content if needed
+		local content = f:read("*all")
+		print("Downloaded content length:", #content)
+		f:close()
+		
+		-- Clean up
+		os.remove("test_download.txt")
+		
+		print("S3 download test completed successfully")
+	`); err != nil {
+		t.Error(err)
+	}
+}

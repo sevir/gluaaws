@@ -45,6 +45,21 @@ print("Paths to invalidate:")
 for _, path in ipairs(invalidation.paths) do
     print("  -", path)
 end
+
+-- Upload a file to S3
+local uploadSuccess = aws.uploadToS3("us-west-2", "default", "my-bucket", "path/to/remote-file.txt", "path/to/local-file.txt")
+print("Upload success:", uploadSuccess)
+
+-- List files in an S3 bucket
+local files = aws.listS3Files("us-west-2", "default", "my-bucket")
+print("Files in bucket:")
+for _, fileName in ipairs(files) do
+    print("  -", fileName)
+end
+
+-- Download a file from S3
+local downloadSuccess = aws.downloadFromS3("us-west-2", "default", "my-bucket", "path/to/remote-file.txt", "path/to/local-destination.txt")
+print("Download success:", downloadSuccess)
 ```
 
 Each instance object contains the following properties:
@@ -59,6 +74,11 @@ Each invalidation object contains the following properties:
 - `id`: The CloudFront invalidation ID
 - `status`: Current invalidation status
 - `paths`: Table containing paths that are being invalidated
+
+S3 functions return:
+- `uploadToS3`: Boolean indicating success or failure
+- `listS3Files`: Table of strings containing file names in the bucket
+- `downloadFromS3`: Boolean indicating success or failure
 
 ## Tasks
 
