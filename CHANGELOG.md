@@ -1,5 +1,14 @@
 # Changelog
 
+### [v0.1.1](https://github.com/sevir/gluaaws/compare/v0.1.0...v0.1.1) (2025-03-22)
+
+#### Features
+
+* **s3:** Add new functions for downloading, uploading and listing s3
+([b0fa444](https://github.com/sevir/gluaaws/commit/b0fa444432498acdc754efc81b7ea1c25c6fc3b4))
+* **cloudfront:** Add new function for removes cache of cloudfront
+([ab5d9b0](https://github.com/sevir/gluaaws/commit/ab5d9b0344e84178aab44e85db6f509225c9af18))
+
 ## v0.1.0 (2025-03-22)
 
 ### Features
